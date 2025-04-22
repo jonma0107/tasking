@@ -3,41 +3,65 @@
 
 Este es un simple gestor de tareas en la terminal que permite agregar, editar, actualizar, eliminar y listar tareas de manera fácil y visualmente atractiva utilizando colores y símbolos. Las tareas se almacenan en un archivo JSON, y el script puede ser ejecutado directamente desde la línea de comandos.
 
+## Creación del archivo
+
+El archivo debe guardarse **sin la extensión `.py`**. Esto se hace para que el script se ejecute directamente desde la terminal como un comando, sin necesidad de invocar `python` o `python3`.
+
+### ¿Por qué sin `.py`?
+Porque el script en cuestión está diseñado para ser ejecutado como un **comando de terminal** o **script** directamente desde la línea de comandos.
+
+Cuando se le da la extensión `.py`, el sistema operativo podría interpretarlo simplemente como un archivo Python, lo que podría requerir que se ejecutes utilizando explícitamente el comando `python` o `python3`. Por ejemplo:
+
+```bash
+python task.py
+```
+Sin embargo, al nombrar el archivo sin extensión (como simplemente task), lo que buscamos es que se pueda ejecutar directamente desde la terminal como un comando. Esto facilita que se pueda escribir:
+
+```bash
+task add "Nueva tarea"
+```
+
+y el sistema lo reconozca como un comando ejecutable sin necesidad de especificar python.
+
 ## Instalación
 
-1. **Clonar el repositorio (si es necesario)**:
+1. Guarda el archivo como task sin la extensión .py.  
 
-   Si aún no tienes el archivo `task.py`, simplemente clónalo o crea un archivo llamado `task.py` con el contenido proporcionado.
-
-2. **Colocar el script en `/usr/local/bin/`**:
-
-   Para poder ejecutar el script desde cualquier lugar del sistema, copia el archivo `task.py` en el directorio `/usr/local/bin/` y renómbralo como `task`.
-
-   Para ello, abre una terminal y ejecuta los siguientes comandos:
+2. Dale permisos de ejecución al archivo:
 
    ```bash
-   sudo cp task.py /usr/local/bin/task
-   sudo chmod +x /usr/local/bin/task
+   chmod +x task
    ```
 
    Esto hará que el script sea ejecutable desde cualquier directorio.
 
-3. **Verificar que se instaló correctamente**:
-
-   Ejecuta el siguiente comando para verificar que el script está disponible globalmente:
+3. Mueve el archivo a una carpeta que esté en tu $PATH, como `/usr/local/bin/`, para que puedas ejecutar el comando globalmente desde cualquier lugar en la terminal. Esto es importante porque al mover el archivo a `/usr/local/bin/`, el sistema 
+   podrá reconocerlo como un comando ejecutable en la terminal. Para mover el archivo, puedes usar el siguiente comando:
 
    ```bash
-   task --help
+   sudo mv task /usr/local/bin/
    ```
+   Asegúrate de que la carpeta /usr/local/bin/ esté incluida en tu $PATH. Esto garantiza que podrás ejecutar el comando task desde cualquier directorio sin tener que especificar la ruta completa del archivo.
 
-   Deberías ver la lista de comandos disponibles.
+   El $PATH es una variable de entorno en los sistemas operativos basados en Unix (como Linux y macOS) que contiene una lista de directorios. Estos directorios son los lugares donde el sistema operativo busca archivos ejecutables cuando ejecutas 
+   un comando en la terminal.
 
+   Cuando escribes un comando en la terminal, como task add "Revisar código", el sistema busca el archivo ejecutable llamado task en los directorios que están especificados en tu $PATH. Si el archivo está en uno de esos directorios, el sistema lo 
+   ejecutará. Si no está, entonces te mostrará un error diciendo que el comando no fue encontrado.
+
+   ### ¿Cómo verificar el $PATH?
+   Puedes verificar qué directorios están en tu $PATH ejecutando el siguiente comando en la terminal:
+
+   ```bash
+   echo $PATH
+   ```
 ---
 
 ## Comandos Disponibles
 
 ### `task add <descripción> [--priority baja|media|alta]`
 Agrega una nueva tarea con la descripción proporcionada y la prioridad indicada. Si no se especifica prioridad, se establecerá "media" por defecto.
+
 
 Ejemplo:
 ```bash
