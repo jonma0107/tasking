@@ -39,7 +39,7 @@ y el sistema lo reconozca como un comando ejecutable sin necesidad de especifica
    ```bash
    sudo mv task /usr/local/bin/
    ```
-   Asegúrate de que la carpeta /usr/local/bin/ esté incluida en tu $PATH. Esto garantiza que podrás ejecutar el comando task desde cualquier directorio sin tener que especificar la ruta completa del archivo.
+   Asegúrate de que la carpeta `/usr/local/bin/` esté incluida en tu $PATH. Esto garantiza que podrás ejecutar el comando task desde cualquier directorio sin tener que especificar la ruta completa del archivo.
 
    El $PATH es una variable de entorno en los sistemas operativos basados en Unix (como Linux y macOS) que contiene una lista de directorios. Estos directorios son los lugares donde el sistema operativo busca archivos ejecutables cuando ejecutas 
    un comando en la terminal.
