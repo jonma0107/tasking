@@ -1,0 +1,172 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+import os
+from datetime import datetime
+
+FILENAME = os.path.expanduser("~/.task_cli_data.json")
+
+def color(text, code):
+    return f"\033[{code}m{text}\033[0m"
+
+def format_task(task):
+    status_icon = {
+        "todo": "📋",
+        "in-progress": "🚧",
+        "done": "✅"
+    }.get(task["status"], "🔸")
+
+    task_id_colored = color(f"[{task['id']}]", '1;37')
+    desc_colored = color(task['description'], '1')
+
+    return (
+        f"{task_id_colored} {status_icon} {desc_colored}\n"
+        f"   • Estado: {color(task['status'], '36')}\n"
+        f"   • Prioridad: {color(task['priority'], '33')}\n"
+        f"   • Creado: {task['createdAt'][:16].replace('T', ' ')}\n"
+        f"   • Actualizado: {task['updatedAt'][:16].replace('T', ' ')}"
+    )
+
+def load_tasks():
+    if not os.path.exists(FILENAME):
+        return []
+    with open(FILENAME, "r") as f:
+        return json.load(f)
+
+def save_tasks(tasks):
+    with open(FILENAME, "w") as f:
+        json.dump(tasks, f, indent=2)
+
+def generate_id(tasks):
+    return max([t["id"] for t in tasks], default=0) + 1
+
+def add_task(description, priority="medium"):
+    tasks = load_tasks()
+    now = datetime.now().isoformat()
+    task = {
+        "id": generate_id(tasks),
+        "description": description,
+        "status": "todo",
+        "priority": priority,
+        "createdAt": now,
+        "updatedAt": now,
+    }
+    tasks.append(task)
+    save_tasks(tasks)
+    print(f"Tarea agregada: {format_task(task)}")
+
+def edit_task(task_id, new_description=None, new_priority=None):
+    tasks = load_tasks()
+    for task in tasks:
+        if task["id"] == task_id:
+            if new_description:
+                task["description"] = new_description
+            if new_priority:
+                task["priority"] = new_priority
+            task["updatedAt"] = datetime.now().isoformat()
+            save_tasks(tasks)
+            print(f"Tarea actualizada: {format_task(task)}")
+            return
+    print("Tarea no encontrada.")
+
+def list_tasks(filter_status=None):
+    tasks = load_tasks()
+    filtered = [t for t in tasks if t["status"] == filter_status] if filter_status else tasks
+    for t in filtered:
+        print(format_task(t))
+
+def update_status(task_id, status):
+    tasks = load_tasks()
+    for task in tasks:
+        if task["id"] == task_id:
+            task["status"] = status
+            task["updatedAt"] = datetime.now().isoformat()
+            save_tasks(tasks)
+            print(f"Estado actualizado: {format_task(task)}")
+            return
+    print("Tarea no encontrada.")
+
+def delete_task(task_id):
+    tasks = load_tasks()
+    new_tasks = [t for t in tasks if t["id"] != task_id]
+    if len(new_tasks) == len(tasks):
+        print("Tarea no encontrada.")
+    else:
+        save_tasks(new_tasks)
+        print("Tarea eliminada.")
+
+def show_help():
+    print("""
+Comandos disponibles:
+  task add <descripción> [--priority baja|media|alta]
+  task edit <id> "nueva descripción" [--priority baja|media|alta]
+  task update <id> todo|in-progress|done
+  task delete <id>
+  task list
+  task list-todo
+  task list-in-progress
+  task list-done
+""")
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+
+    if not args:
+        show_help()
+        sys.exit(0)
+
+    command = args[0]
+
+    if command == "add":
+        if len(args) >= 2:
+            description_parts = []
+            priority = "medium"
+            for i, arg in enumerate(args[1:]):
+                if arg == "--priority":
+                    if i+2 < len(args):
+                        priority = args[i+2].lower()
+                    break
+                else:
+                    description_parts.append(arg)
+            description = " ".join(description_parts)
+            add_task(description, priority)
+        else:
+            print("Uso: task add <descripción> [--priority baja|media|alta]")
+
+    elif command == "edit":
+        if len(args) >= 3:
+            try:
+                task_id = int(args[1])
+                description = args[2]
+                priority = None
+                if "--priority" in args:
+                    idx = args.index("--priority")
+                    if idx+1 < len(args):
+                        priority = args[idx+1].lower()
+                edit_task(task_id, description, priority)
+            except ValueError:
+                print("ID de tarea inválido.")
+        else:
+            print("Uso: task edit <id> \"nueva descripción\" [--priority baja|media|alta]")
+
+    elif command == "update" and len(args) == 3:
+        update_status(int(args[1]), args[2])
+
+    elif command == "delete" and len(args) == 2:
+        delete_task(int(args[1]))
+
+    elif command == "list":
+        list_tasks()
+
+    elif command == "list-done":
+        list_tasks("done")
+
+    elif command == "list-todo":
+        list_tasks("todo")
+
+    elif command == "list-in-progress":
+        list_tasks("in-progress")
+
+    else:
+        show_help()
