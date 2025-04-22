@@ -44,7 +44,7 @@ y el sistema lo reconozca como un comando ejecutable sin necesidad de especifica
    El $PATH es una variable de entorno en los sistemas operativos basados en Unix (como Linux y macOS) que contiene una lista de directorios. Estos directorios son los lugares donde el sistema operativo busca archivos ejecutables cuando ejecutas 
    un comando en la terminal.
 
-   Cuando escribes un comando en la terminal, como task add "Revisar código", el sistema busca el archivo ejecutable llamado task en los directorios que están especificados en tu $PATH. Si el archivo está en uno de esos directorios, el sistema lo 
+   Cuando escribes un comando en la terminal, como `task add "Revisar código"`, el sistema busca el archivo ejecutable llamado task en los directorios que están especificados en tu $PATH. Si el archivo está en uno de esos directorios, el sistema lo 
    ejecutará. Si no está, entonces te mostrará un error diciendo que el comando no fue encontrado.
 
    ### ¿Cómo verificar el $PATH?
