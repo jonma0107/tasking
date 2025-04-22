@@ -8,8 +8,6 @@ Este es un simple gestor de tareas en la terminal que permite agregar, editar, a
 El archivo debe guardarse **sin la extensión `.py`**. Esto se hace para que el script se ejecute directamente desde la terminal como un comando, sin necesidad de invocar `python` o `python3`.
 
 ### ¿Por qué sin `.py`?
-Porque el script en cuestión está diseñado para ser ejecutado como un **comando de terminal** o **script** directamente desde la línea de comandos.
-
 Cuando se le da la extensión `.py`, el sistema operativo podría interpretarlo simplemente como un archivo Python, lo que podría requerir que se ejecutes utilizando explícitamente el comando `python` o `python3`. Por ejemplo:
 
 ```bash
